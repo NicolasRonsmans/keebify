@@ -1,16 +1,16 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
-const FOV = 75;
+const FOV = 45;
 const ASPECT = window.innerWidth / window.innerHeight;
-const NEAR = 0.1;
+const NEAR = 1;
 const FAR = 1000;
 
 class Three {
   el: HTMLDivElement;
   scene: THREE.Scene;
   camera: THREE.Camera;
-  renderer: THREE.Renderer;
+  renderer: THREE.WebGLRenderer;
   controls: OrbitControls;
 
   constructor(el: HTMLDivElement) {
@@ -27,27 +27,48 @@ class Three {
   }
 
   init() {
-    const geometry = new THREE.BoxGeometry(1, 1, 1);
-    const material = new THREE.MeshPhongMaterial({ color: 0x44aa88 });
-    const cube = new THREE.Mesh(geometry, material);
     const ground = new THREE.Mesh(
       new THREE.PlaneBufferGeometry(2000, 2000),
       new THREE.MeshPhongMaterial({ color: 0x999999, depthWrite: false })
     );
-    const light = new THREE.HemisphereLight(0xffffff, 1);
+    const cube = new THREE.Mesh(
+      new THREE.BoxGeometry(50, 50, 50),
+      new THREE.MeshPhongMaterial({ color: 0x44aa88 })
+    );
+    const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444444);
+    const dirLight = new THREE.DirectionalLight(0xffffff, 0.5);
+    const ptLight = new THREE.PointLight(0xffffff, 1);
 
-    cube.position.set(0, 0, 0);
-    cube.castShadow = true;
-    ground.position.set(0, -0.5, 0);
+    ground.position.set(0, 0, 0);
     ground.rotation.set(-Math.PI / 2, 0, 0);
     ground.receiveShadow = true;
-    light.position.set(0, 200, 100);
-    light.castShadow = true;
-    this.scene.background = new THREE.Color('white');
-    this.scene.add(cube, light, ground);
-    this.camera.position.set(0, 0, 5);
+    cube.position.set(0, 25, 0);
+    // cube.castShadow = true;
+    hemiLight.position.set(0, 200, 0);
+    dirLight.position.set(0, 200, 100);
+    dirLight.shadow.camera.top = 180;
+    dirLight.shadow.camera.bottom = -100;
+    dirLight.shadow.camera.left = -120;
+    dirLight.shadow.camera.right = 120;
+    dirLight.castShadow = true;
+    // ptLight.position.set(0, 100, 0);
+    // ptLight.castShadow = true;
+    ptLight.add(
+      new THREE.Mesh(
+        new THREE.SphereBufferGeometry(0.5, 16, 8),
+        new THREE.MeshBasicMaterial({ color: 0xff0040 })
+      )
+    );
+    this.scene.background = new THREE.Color(0xa0a0a0);
+    this.scene.fog = new THREE.Fog(0xa0a0a0, 200, 1000);
+    this.scene.add(this.camera, ground, cube);
+    this.camera.position.set(200, 100, 200);
+    this.camera.add(ptLight);
+    this.renderer.shadowMap.enabled = true;
     this.renderer.setSize(window.innerWidth, window.innerHeight);
+    this.renderer.setPixelRatio(window.devicePixelRatio);
     this.el.appendChild(this.renderer.domElement);
+    this.controls.update();
     this.render();
   }
 
