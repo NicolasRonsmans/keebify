@@ -8,6 +8,7 @@ type layoutKey =
   | {
       a?: number;
       h?: number;
+      c?: string;
       w?: number;
     };
 
@@ -22,89 +23,135 @@ const LAYOUTS = {
     ROWS: ['1', '2', '3', '4', '4'],
     KEYS: [
       [
+        { c: '#D0344C' },
         '~\n`',
+        { c: '#34317C' },
         '!\n1',
+        { c: '#34317C' },
         '@\n2',
+        { c: '#34317C' },
         '#\n3',
+        { c: '#34317C' },
         '$\n4',
+        { c: '#34317C' },
         '%\n5',
+        { c: '#34317C' },
         '^\n6',
+        { c: '#34317C' },
         '&\n7',
+        { c: '#34317C' },
         '*\n8',
+        { c: '#34317C' },
         '(\n9',
+        { c: '#34317C' },
         ')\n0',
+        { c: '#34317C' },
         '_\n-',
+        { c: '#34317C' },
         '+\n=',
-        { w: 2 },
+        { w: 2, c: '#292351' },
         'Backspace',
       ],
       [
-        { w: 1.5 },
+        { w: 1.5, c: '#292351' },
         'Tab',
+        { c: '#34317C' },
         'Q',
+        { c: '#34317C' },
         'W',
+        { c: '#34317C' },
         'E',
+        { c: '#34317C' },
         'R',
+        { c: '#34317C' },
         'T',
+        { c: '#34317C' },
         'Y',
+        { c: '#34317C' },
         'U',
+        { c: '#34317C' },
         'I',
+        { c: '#34317C' },
         'O',
+        { c: '#34317C' },
         'P',
+        { c: '#34317C' },
         '{\n[',
+        { c: '#34317C' },
         '}\n]',
-        { w: 1.5 },
+        { w: 1.5, c: '#34317C' },
         '|\n\\',
       ],
       [
-        { w: 1.75 },
+        { w: 1.75, c: '#292351' },
         'Caps Lock',
+        { c: '#34317C' },
         'A',
+        { c: '#34317C' },
         'S',
+        { c: '#34317C' },
         'D',
+        { c: '#34317C' },
         'F',
+        { c: '#34317C' },
         'G',
+        { c: '#34317C' },
         'H',
+        { c: '#34317C' },
         'J',
+        { c: '#34317C' },
         'K',
+        { c: '#34317C' },
         'L',
+        { c: '#34317C' },
         ':\n;',
+        { c: '#34317C' },
         '"\n\'',
-        { w: 2.25 },
+        { w: 2.25, c: '#D0344C' },
         'Enter',
       ],
       [
-        { w: 2.25 },
+        { w: 2.25, c: '#292351' },
         'Shift',
+        { c: '#34317C' },
         'Z',
+        { c: '#34317C' },
         'X',
+        { c: '#34317C' },
         'C',
+        { c: '#34317C' },
         'V',
+        { c: '#34317C' },
         'B',
+        { c: '#34317C' },
         'N',
+        { c: '#34317C' },
         'M',
+        { c: '#34317C' },
         '<\n,',
+        { c: '#34317C' },
         '>\n.',
+        { c: '#34317C' },
         '?\n/',
-        { w: 2.75 },
+        { w: 2.75, c: '#292351' },
         'Shift',
       ],
       [
-        { w: 1.25 },
+        { w: 1.25, c: '#292351' },
         'Ctrl',
-        { w: 1.25 },
+        { w: 1.25, c: '#292351' },
         'Win',
-        { w: 1.25 },
+        { w: 1.25, c: '#292351' },
         'Alt',
-        { a: 7, w: 6.25 },
+        { a: 7, w: 6.25, c: '#34317C' },
         '',
-        { a: 4, w: 1.25 },
+        { a: 4, w: 1.25, c: '#292351' },
         'Alt',
-        { w: 1.25 },
+        { w: 1.25, c: '#292351' },
         'Win',
-        { w: 1.25 },
+        { w: 1.25, c: '#292351' },
         'Menu',
-        { w: 1.25 },
+        { w: 1.25, c: '#292351' },
         'Ctrl',
       ],
     ],
@@ -206,16 +253,26 @@ class Three {
   }
 
   buildKeeb() {
+    let bg: string = '#ffffff';
     let size: number = 1;
     let x: number = 0;
     let z: number = 0;
+    const group: THREE.Group = new THREE.Group();
 
     LAYOUTS.DEFAULT_60_PERCENT.KEYS.forEach(
       (row: layoutKey[], rowIndex: number) => {
         const rowType = LAYOUTS.DEFAULT_60_PERCENT.ROWS[rowIndex];
 
         row.forEach((key: layoutKey) => {
-          if (isString(key)) {
+          if (isObject(key)) {
+            if (key.w) {
+              size = key.w;
+            }
+
+            if (key.c) {
+              bg = key.c;
+            }
+          } else if (isString(key)) {
             const name = `${size}u-r${rowType}`;
             const geometry = this.keys.cherryMx[name];
 
@@ -224,28 +281,35 @@ class Three {
             }
 
             const material = new THREE.MeshPhongMaterial({
-              color: 0xff5533,
+              color: bg,
               specular: 0x111111,
             });
             const mesh = new THREE.Mesh(geometry, material);
 
             mesh.castShadow = true;
             mesh.receiveShadow = true;
-            mesh.position.set(x + 19 * size * 0.5, 20, z);
-            this.scene.add(mesh);
+            mesh.position.set(x + 19 * size * 0.5, 10, z);
+            group.add(mesh);
 
             x += 19 * size;
+            bg = '#ffffff';
             size = 1;
-          } else if (isObject(key) && key.w) {
-            size = key.w;
           }
         });
 
-        size = 1;
         x = 0;
         z += 19;
       }
     );
+
+    this.scene.add(group);
+
+    const box = new THREE.Box3().setFromObject(group);
+    const boundingBoxSize = box.max.sub(box.min);
+    const width = boundingBoxSize.x;
+    const height = boundingBoxSize.z;
+    group.position.x = -width / 2;
+    group.position.z = -height / 2;
   }
 }
 
