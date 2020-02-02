@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import Three from '../lib/Three';
 
 const Container = styled.div`
-  canvas {
+  > canvas {
     height: 100%;
     margin: 0;
     padding: 0;

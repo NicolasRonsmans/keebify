@@ -162,13 +162,111 @@ const ASPECT = window.innerWidth / window.innerHeight;
 const NEAR = 1;
 const FAR = 1000;
 
+// function assignUVs(geometry: THREE.Geometry) {
+//   geometry.faceVertexUvs[0] = [];
+//   geometry.faces.forEach((face: any) => {
+//     const components = ['x', 'y', 'z'].sort((a: any, b: any) => {
+//       return Math.abs(face.normal[a]) - Math.abs(face.normal[b]);
+//     });
+
+//     const v1: any = geometry.vertices[face.a];
+//     const v2: any = geometry.vertices[face.b];
+//     const v3: any = geometry.vertices[face.c];
+
+//     false &&
+//       geometry.faceVertexUvs[0].push([
+//         new THREE.Vector2(v1[components[0]], v1[components[1]]),
+//         new THREE.Vector2(v2[components[0]], v2[components[1]]),
+//         new THREE.Vector2(v3[components[0]], v3[components[1]]),
+//       ]);
+//   });
+
+//   geometry.uvsNeedUpdate = true;
+// }
+
+function createKeycap(
+  geometry: THREE.BufferGeometry,
+  size: number,
+  bg: string
+) {
+  const material = new THREE.MeshPhongMaterial({
+    color: bg,
+    specular: 0x111111,
+  });
+  const mesh = new THREE.Mesh(geometry, material);
+
+  mesh.castShadow = true;
+  mesh.receiveShadow = true;
+
+  return mesh;
+}
+
+function createKeyprint(text: string, size: number) {
+  const factor = 10;
+  const ctx = document
+    .createElement('canvas')
+    .getContext('2d') as CanvasRenderingContext2D;
+
+  ctx.canvas.height = 18 * factor;
+  ctx.canvas.width = 18 * size * factor;
+
+  ctx.font = '48px sans-serif';
+
+  ctx.fillStyle = 'grey';
+  ctx.fillRect(0, 0, 18 * size * factor, 18 * factor);
+
+  const chars = text.split('\n');
+
+  chars.forEach((char: string, index: number) => {
+    let textBaseline: CanvasTextBaseline = 'middle';
+    let y = 0;
+
+    if (index === 0) {
+      textBaseline = 'top';
+    } else if (index === 1) {
+      textBaseline = 'bottom';
+      y = 18 * factor;
+    }
+
+    ctx.textAlign = 'left';
+    ctx.textBaseline = textBaseline;
+    ctx.fillStyle = 'red';
+    ctx.fillText(
+      char,
+      0,
+      y,
+      // 18 * 0.5 * size * factor,
+      // 18 * 0.5 * factor,
+      1000 * factor
+    );
+  });
+
+  ctx.scale(1 / factor, 1 / factor);
+
+  const texture = new THREE.CanvasTexture(ctx.canvas);
+  const geometry = new THREE.PlaneGeometry(size * 18, 18);
+
+  texture.minFilter = THREE.LinearFilter;
+  texture.wrapS = THREE.ClampToEdgeWrapping;
+  texture.wrapT = THREE.ClampToEdgeWrapping;
+  texture.needsUpdate = true;
+
+  const material = new THREE.MeshBasicMaterial({
+    map: texture,
+    transparent: true,
+  });
+  const mesh = new THREE.Mesh(geometry, material);
+
+  return mesh;
+}
+
 class Three {
   el: HTMLDivElement;
   scene: THREE.Scene;
   camera: THREE.Camera;
   renderer: THREE.WebGLRenderer;
   controls: OrbitControls;
-  loader: STLLoader;
+  font?: THREE.Font;
   keys: { cherryMx: { [key: string]: THREE.BufferGeometry } };
 
   constructor(el: HTMLDivElement) {
@@ -180,13 +278,12 @@ class Three {
       logarithmicDepthBuffer: true,
     });
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
-    this.loader = new STLLoader();
     this.keys = { cherryMx: {} };
 
     this.init();
   }
 
-  init() {
+  async init() {
     const ground = new THREE.Mesh(
       new THREE.PlaneBufferGeometry(2000, 2000),
       new THREE.MeshPhongMaterial({ color: 0x999999, depthWrite: false })
@@ -215,8 +312,13 @@ class Three {
     this.renderer.setPixelRatio(window.devicePixelRatio);
     this.el.appendChild(this.renderer.domElement);
     this.controls.update();
-    this.loadKeys();
+
     this.render();
+
+    // await this.loadFont();
+    await this.loadKeys();
+
+    this.buildKeeb();
   }
 
   render = () => {
@@ -224,23 +326,24 @@ class Three {
     requestAnimationFrame(this.render);
   };
 
+  loadFont() {
+    var loader = new THREE.FontLoader();
+
+    return new Promise(resolve => {
+      loader.load(
+        'assets/fonts/droid/droid_sans_regular.typeface.json',
+        font => {
+          this.font = font;
+
+          return resolve();
+        }
+      );
+    });
+  }
+
   loadKeys() {
     const names: string[] = [];
-    const load = () => {
-      if (names.length === 0) {
-        this.buildKeeb();
-        return;
-      }
-
-      const name = names.shift() as string;
-      const path = `assets/keys/cherry-mx/${name}.stl`;
-
-      this.loader.load(path, geometry => {
-        console.log(`${name} loaded`);
-        this.keys.cherryMx[name] = geometry;
-        load();
-      });
-    };
+    const loader = new STLLoader();
 
     KEYS.CHERRY_MX.ROWS.forEach(row => {
       KEYS.CHERRY_MX.SIZES.forEach(size => {
@@ -249,7 +352,24 @@ class Three {
       });
     });
 
-    load();
+    return new Promise(resolve => {
+      const load = () => {
+        if (names.length === 0) {
+          return resolve();
+        }
+
+        const name = names.shift() as string;
+        const path = `assets/keys/cherry-mx/${name}.stl`;
+
+        loader.load(path, geometry => {
+          console.log(`${name} loaded`);
+          this.keys.cherryMx[name] = geometry;
+          load();
+        });
+      };
+
+      load();
+    });
   }
 
   buildKeeb() {
@@ -274,22 +394,27 @@ class Three {
             }
           } else if (isString(key)) {
             const name = `${size}u-r${rowType}`;
-            const geometry = this.keys.cherryMx[name];
+            const bufferGeometry = this.keys.cherryMx[name];
 
-            if (!geometry) {
+            if (!bufferGeometry) {
               return;
             }
 
-            const material = new THREE.MeshPhongMaterial({
-              color: bg,
-              specular: 0x111111,
-            });
-            const mesh = new THREE.Mesh(geometry, material);
+            // const geometry = new THREE.Geometry().fromBufferGeometry(
+            //   bufferGeometry
+            // );
 
-            mesh.castShadow = true;
-            mesh.receiveShadow = true;
-            mesh.position.set(x + 19 * size * 0.5, 10, z);
-            group.add(mesh);
+            // assignUVs(geometry);
+
+            const keycap = createKeycap(bufferGeometry, size, bg);
+            const keyprint = createKeyprint(key, size);
+
+            keycap.position.set(x + 19 * size * 0.5, 10, z);
+            keyprint.position.set(x + 19 * size * 0.5, 20, z);
+            keyprint.rotateX(-Math.PI / 2);
+
+            group.add(keycap);
+            group.add(keyprint);
 
             x += 19 * size;
             bg = '#ffffff';
