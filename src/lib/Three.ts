@@ -9,12 +9,23 @@ type layoutKey =
       a?: number;
       h?: number;
       c?: string;
+      t?: string;
       w?: number;
     };
 
 const KEYS = {
   CHERRY_MX: {
-    SIZES: ['1', '1.25', '1.5', '1.75', '2', '2.25', '2.5', '2.75', '6.25'],
+    SIZES: [
+      { key: '1', value: 18 - 5 },
+      { key: '1.25', value: 23 - 6 },
+      { key: '1.5', value: 28 - 6 },
+      { key: '1.75', value: 32 - 6 },
+      { key: '2', value: 37 - 6 },
+      { key: '2.25', value: 42 - 6 },
+      { key: '2.5', value: 47 - 6 },
+      { key: '2.75', value: 51 - 6 },
+      { key: '6.25', value: 118 - 5 },
+    ],
     ROWS: ['1', '2', '3', '4'],
   },
 };
@@ -23,136 +34,94 @@ const LAYOUTS = {
     ROWS: ['1', '2', '3', '4', '4'],
     KEYS: [
       [
-        { c: '#D0344C' },
+        { c: '#333079', t: '#099AB4' },
         '~\n`',
-        { c: '#34317C' },
         '!\n1',
-        { c: '#34317C' },
         '@\n2',
-        { c: '#34317C' },
         '#\n3',
-        { c: '#34317C' },
         '$\n4',
-        { c: '#34317C' },
         '%\n5',
-        { c: '#34317C' },
         '^\n6',
-        { c: '#34317C' },
         '&\n7',
-        { c: '#34317C' },
         '*\n8',
-        { c: '#34317C' },
         '(\n9',
-        { c: '#34317C' },
         ')\n0',
-        { c: '#34317C' },
         '_\n-',
-        { c: '#34317C' },
         '+\n=',
-        { w: 2, c: '#292351' },
+        { c: '#27234D', t: '#CF334D', a: 6, w: 2 },
         'Backspace',
       ],
       [
-        { w: 1.5, c: '#292351' },
+        { w: 1.5 },
         'Tab',
-        { c: '#34317C' },
+        { c: '#333079', t: '#099AB4', a: 4 },
         'Q',
-        { c: '#34317C' },
         'W',
-        { c: '#34317C' },
         'E',
-        { c: '#34317C' },
         'R',
-        { c: '#34317C' },
         'T',
-        { c: '#34317C' },
         'Y',
-        { c: '#34317C' },
         'U',
-        { c: '#34317C' },
         'I',
-        { c: '#34317C' },
         'O',
-        { c: '#34317C' },
         'P',
-        { c: '#34317C' },
         '{\n[',
-        { c: '#34317C' },
         '}\n]',
-        { w: 1.5, c: '#34317C' },
+        { w: 1.5 },
         '|\n\\',
       ],
       [
-        { w: 1.75, c: '#292351' },
+        { c: '#27234D', t: '#CF334D', a: 6, w: 1.75 },
         'Caps Lock',
-        { c: '#34317C' },
+        { c: '#333079', t: '#099AB4', a: 4 },
         'A',
-        { c: '#34317C' },
         'S',
-        { c: '#34317C' },
         'D',
-        { c: '#34317C' },
         'F',
-        { c: '#34317C' },
         'G',
-        { c: '#34317C' },
         'H',
-        { c: '#34317C' },
         'J',
-        { c: '#34317C' },
         'K',
-        { c: '#34317C' },
         'L',
-        { c: '#34317C' },
         ':\n;',
-        { c: '#34317C' },
         '"\n\'',
-        { w: 2.25, c: '#D0344C' },
+        { c: '#CF334D', t: '#27234D', a: 6, w: 2.25 },
         'Enter',
       ],
       [
-        { w: 2.25, c: '#292351' },
+        { c: '#27234D', t: '#CF334D', w: 2.25 },
         'Shift',
-        { c: '#34317C' },
+        { c: '#333079', t: '#099AB4', a: 4 },
         'Z',
-        { c: '#34317C' },
         'X',
-        { c: '#34317C' },
         'C',
-        { c: '#34317C' },
         'V',
-        { c: '#34317C' },
         'B',
-        { c: '#34317C' },
         'N',
-        { c: '#34317C' },
         'M',
-        { c: '#34317C' },
         '<\n,',
-        { c: '#34317C' },
         '>\n.',
-        { c: '#34317C' },
         '?\n/',
-        { w: 2.75, c: '#292351' },
+        { c: '#27234D', t: '#CF334D', a: 6, w: 2.75 },
         'Shift',
       ],
       [
-        { w: 1.25, c: '#292351' },
-        'Ctrl',
-        { w: 1.25, c: '#292351' },
-        'Win',
-        { w: 1.25, c: '#292351' },
+        { w: 1.25 },
+        'Control',
+        { w: 1.25 },
+        'Code',
+        { w: 1.25 },
         'Alt',
-        { a: 7, w: 6.25, c: '#34317C' },
+        { c: '#CF334D', t: '#000000', a: 7, w: 6.25 },
         '',
-        { a: 4, w: 1.25, c: '#292351' },
+        { c: '#27234D', t: '#CF334D', a: 6, w: 1.25 },
         'Alt',
-        { w: 1.25, c: '#292351' },
-        'Win',
-        { w: 1.25, c: '#292351' },
-        'Menu',
-        { w: 1.25, c: '#292351' },
-        'Ctrl',
+        { w: 1.25 },
+        'Code',
+        { w: 1.25 },
+        'Fn',
+        { w: 1.25 },
+        'Control',
       ],
     ],
   },
@@ -184,11 +153,7 @@ const FAR = 1000;
 //   geometry.uvsNeedUpdate = true;
 // }
 
-function createKeycap(
-  geometry: THREE.BufferGeometry,
-  size: number,
-  bg: string
-) {
+function createKeycap(geometry: THREE.BufferGeometry, bg: string) {
   const material = new THREE.MeshPhongMaterial({
     color: bg,
     specular: 0x111111,
@@ -201,58 +166,110 @@ function createKeycap(
   return mesh;
 }
 
-function createKeyprint(text: string, size: number) {
-  const factor = 10;
+function createKeyprint(
+  text: string,
+  size: number,
+  rowType: string,
+  color: string
+) {
+  const { width, height } = (() => {
+    let width, height;
+
+    switch (size) {
+      case 1.25:
+        width = KEYS.CHERRY_MX.SIZES[1].value;
+        break;
+      case 1.5:
+        width = KEYS.CHERRY_MX.SIZES[2].value;
+        break;
+      case 1.75:
+        width = KEYS.CHERRY_MX.SIZES[3].value;
+        break;
+      case 2:
+        width = KEYS.CHERRY_MX.SIZES[4].value;
+        break;
+      case 2.25:
+        width = KEYS.CHERRY_MX.SIZES[5].value;
+        break;
+      case 2.5:
+        width = KEYS.CHERRY_MX.SIZES[6].value;
+        break;
+      case 2.75:
+        width = KEYS.CHERRY_MX.SIZES[7].value;
+        break;
+      case 6.25:
+        width = KEYS.CHERRY_MX.SIZES[8].value;
+        break;
+      case 1:
+      default:
+        width = KEYS.CHERRY_MX.SIZES[0].value;
+    }
+
+    switch (rowType) {
+      case '1':
+        height = 14;
+        break;
+      case '2':
+        height = 14.1;
+        break;
+      case '3':
+        height = 14;
+        break;
+      case '4':
+        height = 14;
+        break;
+      default:
+        height = 14;
+    }
+
+    return { width, height };
+  })();
+  const factor = 12;
+  const padding = 1.1 * factor;
   const ctx = document
     .createElement('canvas')
     .getContext('2d') as CanvasRenderingContext2D;
 
-  ctx.canvas.height = 18 * factor;
-  ctx.canvas.width = 18 * size * factor;
+  ctx.canvas.height = height * factor;
+  ctx.canvas.width = width * factor;
 
-  ctx.font = '48px sans-serif';
+  ctx.font = 'bold 40px Helvetica, Arial, sans-serif';
 
-  ctx.fillStyle = 'grey';
-  ctx.fillRect(0, 0, 18 * size * factor, 18 * factor);
+  // ctx.fillStyle = 'grey';
+  // ctx.fillRect(0, 0, width * factor, height * factor);
 
   const chars = text.split('\n');
 
   chars.forEach((char: string, index: number) => {
     let textBaseline: CanvasTextBaseline = 'middle';
-    let y = 0;
+    let y = padding;
 
     if (index === 0) {
       textBaseline = 'top';
     } else if (index === 1) {
       textBaseline = 'bottom';
-      y = 18 * factor;
+      y = height * factor - padding;
     }
 
     ctx.textAlign = 'left';
     ctx.textBaseline = textBaseline;
-    ctx.fillStyle = 'red';
-    ctx.fillText(
-      char,
-      0,
-      y,
-      // 18 * 0.5 * size * factor,
-      // 18 * 0.5 * factor,
-      1000 * factor
-    );
+    ctx.fillStyle = color;
+    ctx.fillText(char, padding, y, 100 * factor);
   });
 
   ctx.scale(1 / factor, 1 / factor);
 
   const texture = new THREE.CanvasTexture(ctx.canvas);
-  const geometry = new THREE.PlaneGeometry(size * 18, 18);
+  const geometry = new THREE.PlaneGeometry(width, height);
 
   texture.minFilter = THREE.LinearFilter;
   texture.wrapS = THREE.ClampToEdgeWrapping;
   texture.wrapT = THREE.ClampToEdgeWrapping;
   texture.needsUpdate = true;
 
-  const material = new THREE.MeshBasicMaterial({
+  const material = new THREE.MeshPhongMaterial({
     map: texture,
+    specular: 0x111111,
     transparent: true,
   });
   const mesh = new THREE.Mesh(geometry, material);
@@ -347,7 +364,7 @@ class Three {
 
     KEYS.CHERRY_MX.ROWS.forEach(row => {
       KEYS.CHERRY_MX.SIZES.forEach(size => {
-        const name = `${size}u-r${row}`;
+        const name = `${size.key}u-r${row}`;
         names.push(name);
       });
     });
@@ -373,7 +390,8 @@ class Three {
   }
 
   buildKeeb() {
-    let bg: string = '#ffffff';
+    let bg: string = '#ccc';
+    let fg: string = '#333';
     let size: number = 1;
     let x: number = 0;
     let z: number = 0;
@@ -392,6 +410,10 @@ class Three {
             if (key.c) {
               bg = key.c;
             }
+
+            if (key.t) {
+              fg = key.t;
+            }
           } else if (isString(key)) {
             const name = `${size}u-r${rowType}`;
             const bufferGeometry = this.keys.cherryMx[name];
@@ -400,24 +422,54 @@ class Three {
               return;
             }
 
-            // const geometry = new THREE.Geometry().fromBufferGeometry(
-            //   bufferGeometry
-            // );
+            const posX = (18 + 1) * size;
+            const keycap = createKeycap(bufferGeometry, bg);
+            // console.log(keycap);
 
-            // assignUVs(geometry);
-
-            const keycap = createKeycap(bufferGeometry, size, bg);
-            const keyprint = createKeyprint(key, size);
-
-            keycap.position.set(x + 19 * size * 0.5, 10, z);
-            keyprint.position.set(x + 19 * size * 0.5, 20, z);
-            keyprint.rotateX(-Math.PI / 2);
+            keycap.position.set(x + posX * 0.5, 10, z);
 
             group.add(keycap);
-            group.add(keyprint);
 
-            x += 19 * size;
-            bg = '#ffffff';
+            if (key) {
+              const keyprint = createKeyprint(key, size, rowType, fg);
+              const { posZ, posY, rotation } = (() => {
+                const base = -Math.PI / 2;
+                const unit = Math.PI / 90;
+                let posZ: number = z;
+                let posY: number = 20;
+                let rotation: number = base;
+
+                switch (rowType) {
+                  case '1':
+                    posZ -= 1.9;
+                    posY = 10 + 8.9;
+                    rotation += -4.5 * unit;
+                    break;
+                  case '2':
+                    posZ -= 1.9;
+                    posY = 10 + 8.5;
+                    rotation += -2.6 * unit;
+                    break;
+                  case '3':
+                    posZ -= 1.8;
+                    posY = 10 + 9.05;
+                    rotation += -0.5 * unit;
+                    break;
+                  case '4':
+                    posZ -= 1.8;
+                    posY = 10 + 11;
+                    rotation += +1.2 * unit;
+                    break;
+                }
+
+                return { posZ, posY, rotation };
+              })();
+              keyprint.position.set(x + posX * 0.5, posY, posZ);
+              keyprint.rotation.set(rotation, 0, 0);
+              group.add(keyprint);
+            }
+
+            x += posX;
             size = 1;
           }
         });
