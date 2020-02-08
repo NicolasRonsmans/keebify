@@ -1,9 +1,6 @@
-import React from 'react';
 import { createGlobalStyle } from 'styled-components';
 
-import Three from './Three';
-
-const GlobalStyle = createGlobalStyle`
+export const GlobalStyle = createGlobalStyle`
   *,
   *:before,
   *:after {
@@ -22,14 +19,3 @@ const GlobalStyle = createGlobalStyle`
     width: 100%;
   }
 `;
-
-function App() {
-  return (
-    <div>
-      <GlobalStyle />
-      <Three />
-    </div>
-  );
-}
-
-export default App;

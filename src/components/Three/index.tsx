@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import styled from 'styled-components';
 
-import Three from '../lib/Three';
+import ThreeLib from './lib/Three';
 
 const Container = styled.div`
   > canvas {
@@ -14,14 +14,14 @@ const Container = styled.div`
 
 function ThreeContainer() {
   const el = useRef<HTMLDivElement>(null);
-  const three = useRef<Three>();
+  const three = useRef<ThreeLib>();
 
   useEffect(() => {
     if (!el.current) {
       return;
     }
 
-    three.current = new Three(el.current);
+    three.current = new ThreeLib(el.current);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [el]);
 
