@@ -1,5 +1,8 @@
-export const KEYS = {
+import { KeysProfile } from '../types';
+
+export const KEYS: KeysProfile = {
   CHERRY_MX: {
+    PATH: 'assets/keys/cherry-mx/',
     SIZES: [
       { key: '1', value: 18 - 5 },
       { key: '1.25', value: 23 - 6 },

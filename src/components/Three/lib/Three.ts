@@ -1,11 +1,13 @@
 import { isString, isObject } from 'lodash';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
 
-import { KEYS, LAYOUTS, CAMERA } from '../constants';
-import { KeysLibrary, LayoutKey } from '../types';
-import { createKeycap, createKeyprint } from './helpers';
+import { LAYOUTS, CAMERA } from '../constants';
+import { LayoutKey } from '../types';
+import { createKeyprint } from './helpers';
+import Keycap from './Keycap';
+
+// let el, scene, camera, renderer, controls;
 
 class Three {
   el: HTMLDivElement;
@@ -13,7 +15,6 @@ class Three {
   camera: THREE.PerspectiveCamera;
   renderer: THREE.WebGLRenderer;
   controls: OrbitControls;
-  keys: KeysLibrary;
 
   constructor(el: HTMLDivElement) {
     this.el = el;
@@ -29,7 +30,6 @@ class Three {
       logarithmicDepthBuffer: true,
     });
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
-    this.keys = {};
 
     this.init();
   }
@@ -44,9 +44,8 @@ class Three {
     this.setupListeners();
 
     this.render();
-
-    await this.loadKeys();
-    this.buildKeeb();
+    await Keycap.load('CHERRY_MX');
+    this.buildLayout();
   }
 
   setupScene() {
@@ -110,40 +109,7 @@ class Three {
     requestAnimationFrame(this.render);
   };
 
-  loadKeys() {
-    const names: string[] = [];
-    const loader = new STLLoader();
-
-    this.keys.cherryMx = {};
-
-    KEYS.CHERRY_MX.ROWS.forEach(row => {
-      KEYS.CHERRY_MX.SIZES.forEach(size => {
-        const name = `${size.key}u-r${row}`;
-        names.push(name);
-      });
-    });
-
-    return new Promise(resolve => {
-      const load = () => {
-        if (names.length === 0) {
-          return resolve();
-        }
-
-        const name = names.shift() as string;
-        const path = `assets/keys/cherry-mx/${name}.stl`;
-
-        loader.load(path, geometry => {
-          console.log(`${name} loaded`);
-          this.keys.cherryMx[name] = geometry;
-          load();
-        });
-      };
-
-      load();
-    });
-  }
-
-  buildKeeb() {
+  buildLayout() {
     let bg: string = '#ccc';
     let fg: string = '#333';
     let size: number = 1;
@@ -170,15 +136,13 @@ class Three {
             }
           } else if (isString(key)) {
             const name = `${size}u-r${rowType}`;
-            const bufferGeometry = this.keys.cherryMx[name];
+            const posX = (18 + 1) * size;
+            const keycap = Keycap.create(name, bg, key);
 
-            if (!bufferGeometry) {
+            // console.log(keycap);
+            if (!keycap) {
               return;
             }
-
-            const posX = (18 + 1) * size;
-            const keycap = createKeycap(bufferGeometry, bg);
-            // console.log(keycap);
 
             keycap.position.set(x + posX * 0.5, 10, z);
 
@@ -235,6 +199,7 @@ class Three {
 
     this.scene.add(group);
 
+    // Center group
     const box = new THREE.Box3().setFromObject(group);
     const boundingBoxSize = box.max.sub(box.min);
     const width = boundingBoxSize.x;
