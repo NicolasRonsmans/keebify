@@ -18,5 +18,7 @@ deploy:
         url: http://keebify.tk
     script:
         - docker-compose up -d
+    after_script:
+        - docker system prune -af --volumes
     only:
         - tags

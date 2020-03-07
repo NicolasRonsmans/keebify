@@ -4,7 +4,7 @@ USER node
 
 ENV NPM_CONFIG_PREFIX=~/.npm-global
 
-RUN mkdir ~/.npm-global && mkdir ~/app && mkdir ~/app/client && mkdir ~/app/client/node_modules
+RUN mkdir ~/.npm-global
 
 # CLIENT
 WORKDIR /home/node/app/client
