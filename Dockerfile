@@ -1,11 +1,13 @@
 FROM node:10.19.0-alpine
 
+ENV NPM_CONFIG_PREFIX=/home/node/.npm-global
+
 USER node
 
-# CLIENT
-WORKDIR /usr/src/app/client
+RUN mkdir /home/node/.npm-global && mkdir /home/node/app && mkdir /home/node/app/client && mkdir /home/node/app/server
 
-RUN chown -R node:node /usr/src/app/client
+# CLIENT
+WORKDIR /home/node/app/client
 
 COPY /client/package.json /client/yarn.lock ./
 
@@ -18,9 +20,7 @@ RUN yarn build
 RUN rm -rf ./node_modules
 
 # SERVER
-WORKDIR /usr/src/app/server
-
-RUN chown -R node:node /usr/src/app/server
+WORKDIR /home/node/app/server
 
 COPY /server/package.json /server/yarn.lock ./
 
