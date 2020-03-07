@@ -2,8 +2,6 @@ FROM node:10.19.0-alpine
 
 USER node
 
-RUN mkdir ~/.npm-global && mkdir ~/app && mkdir ~/app/client && mkdir ~/app/server
-
 # CLIENT
 WORKDIR /home/node/app/client
 

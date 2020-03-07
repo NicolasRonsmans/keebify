@@ -10,7 +10,7 @@ services:
         volumes:
             - "./client/:/home/node/app/client"
             - "./server/:/home/node/app/server"
-            - "./client/node_modules:/home/node/app/client/node_modules"
+            - "./client/node_modules:/home/node/app/client/node_modules:rw"
         environment:
             - NODE_ENV=production
             - GENERATE_SOURCEMAP=false
