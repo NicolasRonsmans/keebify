@@ -1,5 +1,6 @@
 FROM node:10.19.0-alpine
 
+RUN chown node:node /usr/src/app
 USER node
 
 # CLIENT
