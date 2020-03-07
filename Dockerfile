@@ -1,5 +1,7 @@
 FROM node:10.19.0-alpine
 
+USER node
+
 # CLIENT
 WORKDIR /usr/src/app/client
 
