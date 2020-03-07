@@ -2,6 +2,10 @@ FROM node:10.19.0-alpine
 
 USER node
 
+ENV NPM_CONFIG_PREFIX=~/.npm-global
+
+RUN mkdir ~/.npm-global
+
 # CLIENT
 WORKDIR /home/node/app/client
 
