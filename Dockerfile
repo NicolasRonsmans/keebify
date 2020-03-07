@@ -1,12 +1,10 @@
 FROM node:10.19.0-alpine
 
-WORKDIR /usr/src/app
-
-RUN chown -R node:node /usr/src/app
-
 USER node
 
 # CLIENT
+RUN mkdir /usr/src/app/client
+
 WORKDIR /usr/src/app/client
 
 COPY /client/package.json /client/yarn.lock ./
@@ -20,6 +18,8 @@ RUN yarn build
 RUN rm -rf ./node_modules
 
 # SERVER
+RUN mkdir /usr/src/app/server
+
 WORKDIR /usr/src/app/server
 
 COPY /server/package.json /server/yarn.lock ./
