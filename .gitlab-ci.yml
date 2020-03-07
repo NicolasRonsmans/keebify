@@ -1,0 +1,25 @@
+stages:
+    - build
+    - deploy
+
+build:
+    stage: build
+    before_script:
+        - docker system prune -af --volumes
+        - docker-compose down --remove-orphans
+    script:
+        - docker-compose build --force-rm --no-cache
+    only:
+        - tags
+
+deploy:
+    stage: deploy
+    environment:
+        name: production
+        url: http://keebify.tk
+    script:
+        - docker-compose up -d
+    after_script:
+        - docker system prune -af --volumes
+    only:
+        - tags

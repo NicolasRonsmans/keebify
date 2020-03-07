@@ -1,23 +1,35 @@
-FROM node:10.19.0-alpine
+ARG NODE_VERSION=10.19.0
 
 # CLIENT
-WORKDIR /usr/src/app/client
+FROM node:${NODE_VERSION}-alpine AS client
 
-COPY /client/package.json /client/yarn.lock ./
+WORKDIR /home/node
 
-RUN yarn --frozen-lockfile --no-cache
+ADD --chown=node:node /client /home/node
 
-COPY /client ./
+USER node
 
-# RUN yarn lint
+RUN yarn install --frozen-lockfile --no-cache
+RUN chmod +x ./node_modules/.bin/react-scripts
 RUN yarn build
 RUN rm -rf ./node_modules
 
 # SERVER
-WORKDIR /usr/src/app/server
+FROM node:${NODE_VERSION}-alpine AS server
 
-COPY /server/package.json /server/yarn.lock ./
+WORKDIR /home/node
 
-RUN yarn --frozen-lockfile --no-cache --production
+ADD --chown=node:node /server /home/node
 
-COPY /server ./
+RUN yarn install --frozen-lockfile --no-cache --production
+
+# APP
+FROM node:${NODE_VERSION}-alpine
+
+WORKDIR /home/node/app/client
+
+COPY --from=client /home/node /home/node/app/client
+
+WORKDIR /home/node/app/server
+
+COPY --from=server /home/node /home/node/app/server

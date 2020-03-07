@@ -5,9 +5,9 @@ services:
         image: node:10.19.0-alpine
         container_name: client
         ports:
-            - "${CLIENT_APP_PORT}:${CLIENT_APP_PORT}"
+            - "${CLIENT_PORT}:${CLIENT_PORT}"
         volumes:
-            - "./client/:/usr/src/app"
-            - "./client/node_modules:/usr/src/app/node_modules"
+            - "./client/:/home/node/app"
+            - "./client/node_modules:/home/node/app/node_modules"
         working_dir: /usr/src/app
         command: sh -c "yarn && yarn start"
