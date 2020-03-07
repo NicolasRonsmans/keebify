@@ -15,7 +15,7 @@ RUN yarn --frozen-lockfile --no-cache
 
 COPY /client ./
 
-# RUN chmod -R 777 ./
+RUN chmod -R 777 ./
 
 # RUN yarn lint
 RUN yarn build
