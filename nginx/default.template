@@ -1,0 +1,9 @@
+server {
+    listen 80;
+
+    server_name ${HOST} www.${HOST};
+
+    location / {
+        proxy_pass ${PROXY};
+    }
+}

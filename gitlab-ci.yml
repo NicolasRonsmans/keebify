@@ -1,0 +1,22 @@
+stages:
+  - build
+  - deploy
+
+build:
+  stage: build
+  before_script:
+    - docker-compose down --remove-orphans
+  script:
+    - docker-compose build --force-rm --no-cache
+  only:
+    - tags
+
+deploy:
+  stage: deploy
+  environment:
+    name: production
+    url: http://$NGINX_HOST
+  script:
+    - docker-compose up -d
+  only:
+    - tags
