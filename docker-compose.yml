@@ -7,6 +7,10 @@ services:
         user: "node"
         ports:
             - "127.0.0.1:${HOST_PORT}:80"
+        volumes:
+            - "./client/:/home/node/app/client"
+            - "./server/:/home/node/app/server"
+            - "./client/node_modules:/home/node/app/client/node_modules"
         environment:
             - NODE_ENV=production
             - GENERATE_SOURCEMAP=false
