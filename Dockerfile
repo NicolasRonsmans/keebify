@@ -16,6 +16,7 @@ RUN yarn --frozen-lockfile --no-cache
 COPY /client ./
 
 # RUN yarn lint
+RUN chmod +x ./node_modules/.bin/react-scripts
 RUN yarn build
 RUN rm -rf ./node_modules
 
