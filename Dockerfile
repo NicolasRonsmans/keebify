@@ -7,6 +7,8 @@ WORKDIR /home/node
 
 ADD /client /home/node
 
+RUN ls -al
+
 RUN yarn install --frozen-lockfile --no-cache && yarn build
 
 FROM node:${NODE_VERSION}-alpine
