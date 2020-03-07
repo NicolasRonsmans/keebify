@@ -5,7 +5,6 @@ USER node
 # CLIENT
 WORKDIR /usr/src/app/client
 
-RUN chmod -R 775 /usr/src/app/client
 RUN chown -R node:node /usr/src/app/client
 
 COPY /client/package.json /client/yarn.lock ./
@@ -21,7 +20,6 @@ RUN rm -rf ./node_modules
 # SERVER
 WORKDIR /usr/src/app/server
 
-RUN chmod -R 775 /usr/src/app/server
 RUN chown -R node:node /usr/src/app/server
 
 COPY /server/package.json /server/yarn.lock ./
