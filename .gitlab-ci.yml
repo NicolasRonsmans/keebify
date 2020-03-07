@@ -5,7 +5,6 @@ stages:
 build:
     stage: build
     before_script:
-        - docker info
         - docker-compose down --remove-orphans
     script:
         - docker-compose build --force-rm --no-cache
@@ -16,7 +15,7 @@ deploy:
     stage: deploy
     environment:
         name: production
-        url: http://$NGINX_HOST
+        url: http://keebify.tk
     script:
         - docker-compose up -d
     only:
