@@ -5,6 +5,7 @@ stages:
 build:
     stage: build
     before_script:
+        - docker system prune -af --volumes
         - docker-compose down --remove-orphans
     script:
         - docker-compose build --force-rm --no-cache
