@@ -1,31 +1,31 @@
-FROM node:10.19.0-alpine
-
-USER node
-
-ENV NPM_CONFIG_PREFIX=~/.npm-global
-
-RUN mkdir ~/.npm-global && mkdir ~/app && mkdir ~/app/client && mkdir ~/app/server
+ARG NODE_VERSION=10.19.0
 
 # CLIENT
+FROM node:${NODE_VERSION}-alpine AS client
+
+WORKDIR /home/node
+
+ADD /client /home/node
+
+RUN yarn install --frozen-lockfile --no-cache && yarn build
+
+FROM node:${NODE_VERSION}-alpine
+
 WORKDIR /home/node/app/client
 
-COPY /client/package.json /client/yarn.lock ./
-
-RUN yarn --frozen-lockfile --no-cache
-
-COPY /client ./
-
-RUN chmod -R 777 ./
-
-# RUN yarn lint
-RUN yarn build
-RUN rm -rf ./node_modules
+COPY --from=client /home/node /home/node/app/client
 
 # SERVER
+FROM node:${NODE_VERSION}-alpine AS server
+
+WORKDIR /home/node
+
+ADD /server /home/node
+
+RUN yarn install --frozen-lockfile --no-cache --production
+
+FROM node:${NODE_VERSION}-alpine
+
 WORKDIR /home/node/app/server
 
-COPY /server/package.json /server/yarn.lock ./
-
-RUN yarn --frozen-lockfile --no-cache --production
-
-COPY /server ./
+COPY --from=server /home/node /home/node/app/server
