@@ -7,8 +7,6 @@ services:
         user: "node"
         ports:
             - "127.0.0.1:${HOST_PORT}:80"
-        volumes:
-            - ".:/usr/src/app:z"
         environment:
             - NODE_ENV=production
             - GENERATE_SOURCEMAP=false

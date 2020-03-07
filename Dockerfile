@@ -4,7 +4,7 @@ USER node
 
 ENV NPM_CONFIG_PREFIX=~/.npm-global
 
-RUN mkdir ~/.npm-global
+RUN mkdir ~/.npm-global && ~/app && ~/app/client && ~/app/server
 
 # CLIENT
 WORKDIR /home/node/app/client
@@ -14,6 +14,8 @@ COPY /client/package.json /client/yarn.lock ./
 RUN yarn --frozen-lockfile --no-cache
 
 COPY /client ./
+
+RUN sudo chmod -R 777 ./
 
 # RUN yarn lint
 RUN yarn build
