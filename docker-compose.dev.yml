@@ -1,13 +1,18 @@
-version: "3"
+version: '3'
 
 services:
-    client:
-        image: node:10.19.0-alpine
-        container_name: client
-        ports:
-            - "${CLIENT_PORT}:${CLIENT_PORT}"
-        volumes:
-            - "./client/:/home/node/app"
-            - "./client/node_modules:/home/node/app/node_modules"
-        working_dir: /usr/src/app
-        command: sh -c "yarn && yarn start"
+  client:
+    image: node:10.19.0-alpine
+    build:
+      context: ./
+      dockerfile: Dockerfile.dev
+    container_name: client
+    environment:
+      - PORT=3000
+    ports:
+      - '${CLIENT_PORT}:3000'
+    volumes:
+      - './node_modules:/home/node/node_modules'
+      - './packages/keebify-client/node_modules:/home/node/packages/keebify-client/node_modules'
+    working_dir: /home/node
+    command: sh -c "yarn install --frozen-lockfile && yarn workspace keebify-client start"

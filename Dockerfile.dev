@@ -1,0 +1,8 @@
+ARG NODE_VERSION=10.19.0
+
+FROM node:${NODE_VERSION}-alpine
+
+WORKDIR /home/node
+
+COPY /package.json /yarn.lock ./
+COPY /packages ./packages
