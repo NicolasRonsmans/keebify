@@ -4,5 +4,6 @@ FROM node:${NODE_VERSION}-alpine
 
 WORKDIR /home/node
 
-COPY /package.json /yarn.lock ./
+COPY /package.json /yarn.lock /tsconfig.base.json ./
+COPY /app ./app
 COPY /packages ./packages

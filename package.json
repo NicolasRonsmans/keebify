@@ -1,12 +1,15 @@
 {
+  "name": "@keebify/root",
   "private": true,
   "workspaces": {
     "packages": [
+      "app",
       "packages/*"
-    ],
-    "nohoist": [
-      "**/keebify-server",
-      "**/keebify-server/**"
     ]
+  },
+  "scripts": {
+    "dev": "yarn workspace @keebify/app dev",
+    "build": "yarn workspace @keebify/app build",
+    "start": "yarn workspace @keebify/app start"
   }
 }

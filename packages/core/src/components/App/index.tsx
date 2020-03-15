@@ -1,7 +1,9 @@
+import dynamic from 'next/dynamic';
 import React from 'react';
 
 import { GlobalStyle } from './style.index';
-import Three from '../Three';
+
+const Three = dynamic(() => import('../Three'), { ssr: false });
 
 function App() {
   return (

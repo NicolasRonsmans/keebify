@@ -13,6 +13,8 @@ services:
       - '${CLIENT_PORT}:3000'
     volumes:
       - './node_modules:/home/node/node_modules'
-      - './packages/keebify-client/node_modules:/home/node/packages/keebify-client/node_modules'
+      - './app/node_modules:/home/node/app/node_modules'
+      - './app/.next:/home/node/app/.next'
+      - './packages/core/node_modules:/home/node/packages/core/node_modules'
     working_dir: /home/node
-    command: sh -c "yarn install --frozen-lockfile && yarn workspace keebify-client start"
+    command: sh -c "yarn install --frozen-lockfile && yarn dev"

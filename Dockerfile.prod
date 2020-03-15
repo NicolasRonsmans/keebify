@@ -5,29 +5,13 @@ FROM node:${NODE_VERSION}-alpine AS packages
 
 WORKDIR /home/node
 
-ADD --chown=node:node /package.json /yarn.lock ./
+ADD --chown=node:node /package.json /yarn.lock /tsconfig.base.json ./
+ADD --chown=node:node /app ./app
 ADD --chown=node:node /packages ./packages
 
 USER node
 
 RUN yarn install --frozen-lockfile --no-cache
-
-# # CLIENT
-RUN chmod +x ./node_modules/.bin/react-scripts
-RUN yarn workspace keebify-client build
-
-# SERVER
-WORKDIR /home/node/packages/keebify-server
-
-# APP
-FROM node:${NODE_VERSION}-alpine
-
-WORKDIR /home/node/client/build
-
-COPY --from=packages /home/node/packages/keebify-client/build ./
-
-WORKDIR /home/node/server
-
-COPY --from=packages /home/node/packages/keebify-server ./
+RUN yarn build
 
 CMD [ "sh", "-c", "yarn start" ]
