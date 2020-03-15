@@ -11,5 +11,8 @@
     "dev": "yarn workspace @keebify/app dev",
     "build": "yarn workspace @keebify/app build",
     "start": "yarn workspace @keebify/app start"
+  },
+  "dependencies": {
+    "@changesets/cli": "^2.6.1"
   }
 }
